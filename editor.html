@@ -1,0 +1,29 @@
+<!--
+    demo
+
+    https://quininer.github.io/tests/#PHNjcmlwdCBzcmM9Imh0dHBzOi8vcXVpbmluZXIuZ2l0aHViLmlvL2Fzc2V0cy9tYXJrZWQvbWFya2VkLm1pbi5qcyI+PC9zY3JpcHQ+CjxzY3JpcHQ+CiAgICB0aGVtZSA9ICI8bGluayByZWw9J3N0eWxlc2hlZXQnIHR5cGU9J3RleHQvY3NzJyBocmVmPSdodHRwczovL3F1aW5pbmVyLmdpdGh1Yi5pby9hc3NldHMvZm9naG9ybi5jc3MnPiI7Cjwvc2NyaXB0Pgo8ZGl2IHN0eWxlPSJ3aWR0aDogMTAwJTsgaGVpZ2h0OiA1MCU7Ij4KICAgIDxpZnJhbWUgaWQ9InZpZXciIHN0eWxlPSJ3aWR0aDogMTAwJTsgaGVpZ2h0OiAxMDAlOyIgc2FuZGJveCBoaWRkZW49dHJ1ZT48L2lmcmFtZT4KICAgIDx0ZXh0YXJlYSBpZD0idGV4dCIgc3R5bGU9IndpZHRoOiAxMDAlOyBoZWlnaHQ6IDEwMCU7Ij48L3RleHRhcmVhPgogICAgPGRpdiBzdHlsZT0iZmxvYXQ6IHJpZ2h0OyI+CiAgICAgICAgPGJ1dHRvbiBpZD0ic3dpdGNoIj5zd2l0Y2g8L2J1dHRvbj48YnV0dG9uIGlkPSJwb3N0Ij5wb3N0PC9idXR0b24+CiAgICA8L2Rpdj4KPGRpdj4KPHNjcmlwdD4KICAgIGRvY3VtZW50LnF1ZXJ5U2VsZWN0b3IoJyNzd2l0Y2gnKS5vbmNsaWNrID0gZnVuY3Rpb24oKXsKICAgICAgICBpZihkb2N1bWVudC5xdWVyeVNlbGVjdG9yKCcjdmlldycpLmhpZGRlbikgewogICAgICAgICAgICBkb2N1bWVudC5xdWVyeVNlbGVjdG9yKCcjdmlldycpLnNyY2RvYyA9IHRoZW1lICsgbWFya2VkKGRvY3VtZW50LnF1ZXJ5U2VsZWN0b3IoJyN0ZXh0JykudmFsdWUpOwogICAgICAgICAgICBkb2N1bWVudC5xdWVyeVNlbGVjdG9yKCcjdmlldycpLmhpZGRlbiA9IGZhbHNlOwogICAgICAgICAgICBkb2N1bWVudC5xdWVyeVNlbGVjdG9yKCcjdGV4dCcpLmhpZGRlbiA9IHRydWU7CiAgICAgICAgfWVsc2V7CiAgICAgICAgICAgIGRvY3VtZW50LnF1ZXJ5U2VsZWN0b3IoJyN2aWV3JykuaGlkZGVuID0gdHJ1ZTsKICAgICAgICAgICAgZG9jdW1lbnQucXVlcnlTZWxlY3RvcignI3RleHQnKS5oaWRkZW4gPSBmYWxzZTsKICAgICAgICB9OwogICAgfTsKPC9zY3JpcHQ+
+-->
+
+<script src="https://quininer.github.io/assets/marked/marked.min.js"></script>
+<script>
+    theme = "<link rel='stylesheet' type='text/css' href='https://quininer.github.io/assets/foghorn.css'>";
+</script>
+<div style="width: 100%; height: 50%;">
+    <iframe id="view" style="width: 100%; height: 100%;" sandbox hidden=true></iframe>
+    <textarea id="text" style="width: 100%; height: 100%;"></textarea>
+    <div style="float: right;">
+        <button id="switch">switch</button><button id="post">post</button>
+    </div>
+<div>
+<script>
+    document.querySelector('#switch').onclick = function(){
+        if(document.querySelector('#view').hidden) {
+            document.querySelector('#view').srcdoc = theme + marked(document.querySelector('#text').value);
+            document.querySelector('#view').hidden = false;
+            document.querySelector('#text').hidden = true;
+        }else{
+            document.querySelector('#view').hidden = true;
+            document.querySelector('#text').hidden = false;
+        };
+    };
+</script>
