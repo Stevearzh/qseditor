@@ -1,2 +1,0 @@
-# qseditor
-BBS post editor.
