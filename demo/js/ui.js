@@ -66,10 +66,18 @@ function Init() {
   }
   
   if (xhr.upload) {
+    document.body.addEventListener('dragover', DocumentListener, false);    
+    document.body.addEventListener('dragleave', DocumentListener, false);    
+    document.body.addEventListener('drop', DocumentListener, false);    
     filedrag.addEventListener('dragover', FileDragHover, false);
     filedrag.addEventListener('dragleave', FileDragHover, false);
     filedrag.addEventListener('drop', FileSelectHandler, false);
   }
+}
+
+function DocumentListener(event) {
+  event.preventDefault();
+  return false;
 }
 
 function FileDragHover(event) {
@@ -96,4 +104,8 @@ function ParseFile(file) {
       '</strong> size: <strong>' + file.size +
       '</strong> bytes</p>'
   );
+}
+
+$id('qseClickHere').onclick = function() {
+  $id('qseFileSelect').click();
 }
