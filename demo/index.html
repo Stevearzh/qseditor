@@ -7,32 +7,10 @@
     <link rel="stylesheet" href="css/qse.css">
   </head>
   <body>
-    <div class="qse" id="qse">
-      <div class="qse-nav">
-	<div class="qse-mode qse-md" id="qseMd">Markdown</div>
-	<div class="qse-mode qse-bbc qse-mode-clear" id="qseBBC">BBCode</div>
-	<div class="qse-action qse-preview" id="qsePreview">预览</div>
-	<div class="qse-action qse-fullscreen" id="qseFullscreen">全屏</div>
-      </div>
-      <div class="qse-face">
-	<div class="qse-main" id="qseMain">
-	  <textarea class="qse-area" id="qseArea"></textarea>
-	  <form action="" class="qse-img-uploader" enctype="multipart/form-data" id="qseImgUploader" method="POST">
-	    <fieldset>
-	      <input class="qse-img-uploader-hidden" id="MAX_FILE_SIZE" name="MAX_FILE_SIZE" type="hidden" value="3000">
-	      <div>
-		<input class="qse-img-uploader-drag" id="qseFileSelect" multiple="multiple" name="fileselect[]" type="file">
-		<div class="qse-img-uploader-information">拖动图片至此处，复制粘贴，或点击<span class="qse-img-uploader-click-here" id="qseClickHere">这里</span>上传</div>
-	      </div>
-	    </fieldset>
-	  </form>
-	</div>
-	<button class="qse-submit" id="qseSubmit">提交</button>
-      </div>
-    </div>
+    <div id="qse"></div>
     <div id="messages">
       <p>Status Messages</p>
     </div>
-    <script src="js/ui.js"></script>
+    <script src="js/qse.js"></script>
   </body>
 </html>
