@@ -3,21 +3,40 @@ function $id(id) {
 }
 
 HTMLElement.prototype.hasClass = function(className) {
-  return !!this.className.match(new RegExp('(\\s|^)' + className + '(\\s|$)'));
+  
 }
 
-HTMLElement.prototype.addClass = function(className) {
-  if (!this.hasClass(className)) {
-    this.className += ' ' + className;
+Object.defineProperty(HTMLElement.prototype, 'hasClass', {
+  writable: true,
+  enumerable: false,
+  configurable: true,
+  value: function(className) {
+    return !!this.className.match(new RegExp('(\\s|^)' + className + '(\\s|$)'));   
   }
-}
+});
 
-HTMLElement.prototype.removeClass = function(className) {
-  if (this.hasClass(className)) {
-    var reg = new RegExp('(\\s|^)' + className + '(\\s|$)');
-    this.className = this.className.replace(reg, ' ');
+Object.defineProperty(HTMLElement.prototype, 'addClass', {
+  writable: true,
+  enumerable: false,
+  configurable: true,
+  value: function(className) {
+    if (!this.hasClass(className)) {
+      this.className += ' ' + className;
+    }
   }
-}
+});
+
+Object.defineProperty(HTMLElement.prototype, 'removeClass', {
+  writable: true,
+  enumerable: false,
+  configurable: true,
+  value: function(className) {
+    if (this.hasClass(className)) {
+      var reg = new RegExp('(\\s|^)' + className + '(\\s|$)');
+      this.className = this.className.replace(reg, ' ');
+    }
+  }
+});
 
 function newNode(parentNodeId, param) {
   var element;
@@ -208,10 +227,6 @@ function Output(msg) {
 }
 
 if (window.File && window.FileList && window.FileReader) {
-  Init();
-}
-
-function Init() {
   var fileselect = $id('qseFileSelect'),
     filedrag = $id('qseMain');
 
