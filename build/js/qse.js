@@ -252,8 +252,8 @@ function DocumentListener(event) {
 function FileDragHover(event) {
   event.stopPropagation();
   event.preventDefault();
-  event.type === 'dragover' ? addClass($id('qseMain'), 'hover') : removeClass($id('qseMain'), 'hover');
-  event.type === 'dragover' ? addClass($id('qseImgUploader'), 'hover') : removeClass($id('qseImgUploader'), 'hover');
+  event.type === 'dragover' ? $id('qseMain').addClass('hover') : $id('qseMain').removeClass('hover');
+  event.type === 'dragover' ? $id('qseImgUploader').addClass('hover') : $id('qseImgUploader').removeClass('hover');
 }
 
 function FileSelectHandler(e) {
