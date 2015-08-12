@@ -1,27 +1,41 @@
 <qseditor name="qseditor">
-	<style></style>
-	<script></script>
+	<script src="./markdown-to-bbcode-js/public/js/underscore.js"></script>
+	<script src="./markdown-to-bbcode-js/public/js/markdown.js"></script>
+	<script src="./bbcode/bbcode.js"></script>
+	<!-- FIXME 这两个不是很好用.. 各种解析错误和不支持 -->
 
-	<template>
-		<button id="switch"></button>
-
-		<button id="topreview"></button>
-		<button id="fullview"></button>
-
-		<textarea id="qseditor-text"></textarea>
-		<iframe id="qseditor-preview"></iframe>
-
-		<button id="post"></button>
-	</template>
+	<textarea id="qse-text"></textarea>
+	<iframe sandbox id="qse-preview"></iframe>
+	<button id="qse-switch-button">switch</button>
+	<button id="qse-preview-button">preview</button>
 
 	<script>
-		({
-			'topreview': function(){
-				//
+		qse = {
+			'mode': "bbcode", // or "markdown"
+			'parse': (new Markdown()).process,
+			'preview': function(textares, preview){
+				text = (this.mode == "markdown")?this.parse(textares.value):textares.value;
+				preview.srcdoc = bbcode.render(text);
 			},
-			'switch': function(){
-				//
-			},
-		})
+			'init': function(){
+				textares = document.getElementById('qse-text');
+				preview = document.getElementById('qse-preview');
+				switchb = document.getElementById('qse-switch-button');
+				previewb = document.getElementById('qse-preview-button');
+
+				switchb.onclick = function(){
+					if(qse.mode == "bbcode"){
+						qse.mode = "markdown";
+					}else if(qse.mode == "markdown"){
+						qse.mode = "bbcode";
+					};
+				};
+
+				previewb.onclick = function(){
+					qse.preview(textares, preview);
+				};
+			}
+		};
+		qse.init();
 	</script>
 </qseditor>
