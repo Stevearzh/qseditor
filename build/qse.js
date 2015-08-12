@@ -1,3 +1,20 @@
+var upConfig = {
+  URL: 'http://v0.api.upyun.com/<bucket-name>',
+  API: 'cAnyet74l9hdUag34h2dZu8z7gU=',     //表单 API，登录 UPYUN 官网获取
+  Param: {     //表单 API 参数，可依据 http://docs.upyun.com/api/form_api/ 文档按需求对参数增删改
+    "bucket": "demobucket",
+    "expiration": 1409200758,
+    "save-key": "{filemd5}"
+  },
+  Policy: function() {
+    return Base64.encode(upConfig.Param);
+  },
+  Signature: function() {
+    var string = upConfig.Policy() + '&' + upConfig.API;
+    return md5(string);
+  }
+};
+
 function $id(id) {
   return document.getElementById(id);
 }
