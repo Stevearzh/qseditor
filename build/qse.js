@@ -96,7 +96,7 @@ var qse = {
       }
     });
 
-    Object.defineProperty(HTMLElement.prototype, 'addNode', {
+    Object.defineProperty(elementPrototype, 'addNode', {
       writable: true,
       enumerable: true,
       configurable: true,
