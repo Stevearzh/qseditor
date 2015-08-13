@@ -261,17 +261,30 @@ var qse = {
       var fileselect = $id('qseFileSelect'),
 	filedrag = $id('qseMain');
 
-      fileselect.addEventListener('change', this.FileSelectHandler, false);
+      if (fileselect.addEventListener) {
+	fileselect.addEventListener('change', this.FileSelectHandler, false);
+      } else {
+	fileselect.attachEvent('change', this.FileSelectHandler);
+      }
 
       var xhr = newRequest();
   
       if (xhr.upload) {
-	document.body.addEventListener('dragover', this.DocumentListener, false);    
-	document.body.addEventListener('dragleave', this.DocumentListener, false);    
-	document.body.addEventListener('drop', this.DocumentListener, false);    
-	filedrag.addEventListener('dragover', this.FileDragHover, false);
-	filedrag.addEventListener('dragleave', this.FileDragHover, false);
-	filedrag.addEventListener('drop', this.FileSelectHandler, false);
+	if (document.body.addEventListener) {
+	  document.body.addEventListener('dragover', this.DocumentListener, false);
+	  document.body.addEventListener('dragleave', this.DocumentListener, false);
+	  document.body.addEventListener('drop', this.DocumentListener, false);
+	  filedrag.addEventListener('dragover', this.FileDragHover, false);
+	  filedrag.addEventListener('dragleave', this.FileDragHover, false);
+	  filedrag.addEventListener('drop', this.FileSelectHandler, false);
+	} else {
+	  document.body.attachEvent('dragover', this.DocumentListener);
+	  document.body.attachEvent('dragleave', this.DocumentListener);
+	  document.body.attachEvent('drop', this.DocumentListener);
+	  filedrag.attachEvent('dragover', this.FileDragHover, false);
+	  filedrag.attachEvent('dragleave', this.FileDragHover, false);
+	  filedrag.attachEvent('drop', this.FileSelectHandler, false);
+	}
       }
     },
 
@@ -320,35 +333,66 @@ var qse = {
 
       // Open a request
       request.open('POST', upConfig.URL, true);
-      
-      // Error event
-      request.addEventListener('error', function(error) {
-	console.log(error);
-      }, false);
 
-      // Upload progress monitor
-      request.addEventListener('progress', function(pro) {
-	Math.round(pro.loaded / pro.total * 100);
-      });
-      
-      // When server response
-      request.addEventListener('load', function(result) {
-	var statusCode = result.target.status;
-
-	// Try to parse JSON
-	if (statusCode !== 200) {
-	  console.log(new Error(result.target.status), result.target);
-	}
-
-	try {
-	  var image = JSON.parse(this.responseText);
-	  image.absUrl = upConfig.Host + image.url;
-	  image.absUri = image.absUrl;
-	  $id('qseArea').value += 'http:' + image.absUrl + '\n';
-	} catch (error) {
+      if (request.addEventListener) {
+	// Error event
+	request.addEventListener('error', function(error) {
 	  console.log(error);
-	}
-      }, false);
+	}, false);
+
+	// Upload progress monitor
+	request.addEventListener('progress', function(pro) {
+	  Math.round(pro.loaded / pro.total * 100);
+	});
+      
+	// When server response
+	request.addEventListener('load', function(result) {
+	  var statusCode = result.target.status;
+	  
+	  // Try to parse JSON
+	  if (statusCode !== 200) {
+	    console.log(new Error(result.target.status), result.target);
+	  }
+
+	  try {
+	    var image = JSON.parse(this.responseText);
+	    image.absUrl = upConfig.Host + image.url;
+	    image.absUri = image.absUrl;
+	    $id('qseArea').value += 'http:' + image.absUrl + '\n';
+	  } catch (error) {
+	    console.log(error);
+	  }
+	}, false);
+      } else {
+	// Error event
+	request.attachEvent('error', function(error) {
+	  console.log(error);
+	});
+
+	// Upload progress monitor
+	request.attachEvent('progress', function(pro) {
+	  Math.round(pro.loaded / pro.total * 100);
+	});
+      
+	// When server response
+	request.attachEvent('load', function(result) {
+	  var statusCode = result.target.status;
+	  
+	  // Try to parse JSON
+	  if (statusCode !== 200) {
+	    console.log(new Error(result.target.status), result.target);
+	  }
+
+	  try {
+	    var image = JSON.parse(this.responseText);
+	    image.absUrl = upConfig.Host + image.url;
+	    image.absUri = image.absUrl;
+	    $id('qseArea').value += 'http:' + image.absUrl + '\n';
+	  } catch (error) {
+	    console.log(error);
+	  }
+	}, false);
+      }
 
       // Send data to server
       request.send(data);
