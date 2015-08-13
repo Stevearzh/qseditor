@@ -344,7 +344,7 @@ var qse = {
 	  var image = JSON.parse(this.responseText);
 	  image.absUrl = upConfig.Host + image.url;
 	  image.absUri = image.absUrl;
-	  console.log('http:' + image.absUrl);
+	  $id('qseArea').value += 'http:' + image.absUrl + '\n';
 	} catch (error) {
 	  console.log(error);
 	}
