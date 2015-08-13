@@ -66,7 +66,7 @@ var qse = {
 
     Object.defineProperty(elementPrototype, 'hasClass', {
       writable: true,
-      enumerable: false,
+      enumerable: true,
       configurable: true,
       value: function(className) {
 	return !!this.className.match(new RegExp('(\\s|^)' + className + '(\\s|$)'));   
@@ -75,7 +75,7 @@ var qse = {
 
     Object.defineProperty(elementPrototype, 'addClass', {
       writable: true,
-      enumerable: false,
+      enumerable: true,
       configurable: true,
       value: function(className) {
 	if (!this.hasClass(className)) {
@@ -86,7 +86,7 @@ var qse = {
 
     Object.defineProperty(elementPrototype, 'removeClass', {
       writable: true,
-      enumerable: false,
+      enumerable: true,
       configurable: true,
       value: function(className) {
 	if (this.hasClass(className)) {
@@ -98,7 +98,7 @@ var qse = {
 
     Object.defineProperty(HTMLElement.prototype, 'addNode', {
       writable: true,
-      enumerable: false,
+      enumerable: true,
       configurable: true,
       value: function(param) {
 	var element;
