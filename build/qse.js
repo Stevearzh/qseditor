@@ -1,22 +1,63 @@
 var upConfig = {
-  URL: 'http://v0.api.upyun.com/<bucket-name>',
-  API: 'cAnyet74l9hdUag34h2dZu8z7gU=',     //表单 API，登录 UPYUN 官网获取
+  Bucket: 'up-loader',
+
+  API: 'DIbaBDVZDMqFRBAtGA5G5yLz8z8=',     //表单 API，登录 UPYUN 官网获取
+  
   Param: {     //表单 API 参数，可依据 http://docs.upyun.com/api/form_api/ 文档按需求对参数增删改
-    "bucket": "demobucket",
-    "expiration": 1409200758,
-    "save-key": "{filemd5}"
+    'expiration': (new Date().getTime()) + 60,
+    'save-key': '/{year}/{mon}/{day}/upload_{filemd5}{.suffix}',
+    'allow-file-type': 'jpg,jpeg,gif,png'
   },
+  
   Policy: function() {
-    return Base64.encode(upConfig.Param);
+    var result = '';
+    for (var i in upConfig.Param) {
+      result += '"' + i + '":';
+      if (isNaN(upConfig.Param[i])) {
+	result += '"' + upConfig.Param[i] + '",';
+      } else {
+	result += upConfig.Param[i] + ',';
+      }
+    }
+    result = result.substring(0, result.length - 1);
+    return btoa('{' + result + '}');
   },
+  
   Signature: function() {
     var string = upConfig.Policy() + '&' + upConfig.API;
     return md5(string);
   }
 };
 
+upConfig.Param.bucket = upConfig.Bucket;
+upConfig.URL = 'http://v0.api.upyun.com/' + upConfig.Bucket;
+upConfig.Host = 'http://' + upConfig.Bucket + '.b0.upaiyun.com';
+
 function $id(id) {
   return document.getElementById(id);
+}
+
+function newRequest() {
+  var xhr;
+  
+  if (typeof XMLHttpRequest !== 'undefined') {
+    xhr = new XMLHttpRequest();
+  } else {
+    var versions = ["MSXML2.XmlHttp.5.0", 
+      "MSXML2.XmlHttp.4.0",
+      "MSXML2.XmlHttp.3.0", 
+      "MSXML2.XmlHttp.2.0",
+      "Microsoft.XmlHttp"];
+ 
+    for (var i = 0, len = versions.length; i < len; i++) {
+      try {
+        xhr = new ActiveXObject(versions[i]);
+        break;
+      } catch(e) {}
+    }
+  }
+
+  return xhr;
 }
 
 Object.defineProperty(HTMLElement.prototype, 'hasClass', {
@@ -219,22 +260,7 @@ var qse = {
 
       fileselect.addEventListener('change', this.FileSelectHandler, false);
 
-      if (typeof XMLHttpRequest !== 'undefined') {
-	xhr = new XMLHttpRequest();
-      } else {
-	var versions = ["MSXML2.XmlHttp.5.0", 
-	  "MSXML2.XmlHttp.4.0",
-	  "MSXML2.XmlHttp.3.0", 
-	  "MSXML2.XmlHttp.2.0",
-	  "Microsoft.XmlHttp"]
- 
-	for (var i = 0, len = versions.length; i < len; i++) {
-	  try {
-            xhr = new ActiveXObject(versions[i]);
-            break;
-	  } catch(e) {}
-	} // end for
-      }
+      var xhr = newRequest();
   
       if (xhr.upload) {
 	document.body.addEventListener('dragover', this.DocumentListener, false);    
@@ -281,6 +307,43 @@ var qse = {
 	  '</strong> size: <strong>' + file.size +
 	  '</strong> bytes</p>'
       );
+
+      var request = newRequest(),
+	     data = new FormData();
+
+      data.append('file', file);
+      data.append('policy', upConfig.Policy());
+      data.append('signature', upConfig.Signature());
+
+      // Open a request
+      request.open('POST', upConfig.URL, true);
+      
+      // Error event
+      request.addEventListener('error', function(error) {
+	console.log(error);
+      }, false);
+      
+      // When server response
+      request.addEventListener('load', function(result) {
+	var statusCode = result.target.status;
+
+	// Try to parse JSON
+	if (statusCode !== 200) {
+	  console.log(new Error(result.target.status), result.target);
+	}
+
+	try {
+	  var image = JSON.parse(this.responseText);
+	  image.absUrl = upConfig.Host + image.url;
+	  image.absUri = image.absUrl;
+	  console.log(image.absUrl);
+	} catch (error) {
+	  console.log(error);
+	}
+      }, false);
+
+      // Send data to server
+      request.send(data);
     },
     
     Output: function(msg) {
