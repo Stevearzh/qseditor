@@ -6,7 +6,7 @@ var upConfig = {
   Param: {     //表单 API 参数，可依据 http://docs.upyun.com/api/form_api/ 文档按需求对参数增删改
     'expiration': (new Date().getTime()) + 60,
     'save-key': '/{year}/{mon}/{day}/upload_{filemd5}{.suffix}',
-    'allow-file-type': 'jpg,jpeg,gif,png'
+    'allow-file-type': 'jpg,jpeg,gif,png,bmp,svg'
   },
   
   Policy: function() {
@@ -30,8 +30,8 @@ var upConfig = {
 };
 
 upConfig.Param.bucket = upConfig.Bucket;
-upConfig.URL = 'http://v0.api.upyun.com/' + upConfig.Bucket;
-upConfig.Host = 'http://' + upConfig.Bucket + '.b0.upaiyun.com';
+upConfig.URL = '//v0.api.upyun.com/' + upConfig.Bucket;
+upConfig.Host = '//' + upConfig.Bucket + '.b0.upaiyun.com';
 
 function $id(id) {
   return document.getElementById(id);
@@ -39,7 +39,7 @@ function $id(id) {
 
 function newRequest() {
   var xhr;
-  
+
   if (typeof XMLHttpRequest !== 'undefined') {
     xhr = new XMLHttpRequest();
   } else {
@@ -60,64 +60,67 @@ function newRequest() {
   return xhr;
 }
 
-Object.defineProperty(HTMLElement.prototype, 'hasClass', {
-  writable: true,
-  enumerable: false,
-  configurable: true,
-  value: function(className) {
-    return !!this.className.match(new RegExp('(\\s|^)' + className + '(\\s|$)'));   
-  }
-});
-
-Object.defineProperty(HTMLElement.prototype, 'addClass', {
-  writable: true,
-  enumerable: false,
-  configurable: true,
-  value: function(className) {
-    if (!this.hasClass(className)) {
-      this.className += ' ' + className;
-    }
-  }
-});
-
-Object.defineProperty(HTMLElement.prototype, 'removeClass', {
-  writable: true,
-  enumerable: false,
-  configurable: true,
-  value: function(className) {
-    if (this.hasClass(className)) {
-      var reg = new RegExp('(\\s|^)' + className + '(\\s|$)');
-      this.className = this.className.replace(reg, ' ');
-    }
-  }
-});
-
-Object.defineProperty(HTMLElement.prototype, 'addNode', {
-  writable: true,
-  enumerable: false,
-  configurable: true,
-  value: function(param) {
-    var element;
-
-    if (param['isTextNode']) {
-      element = document.createTextNode(param['text']);
-    } else {
-      element = document.createElement(param['nodeType']);
-      param['className'] ? element.className = param['className'] : '';
-      param['id'] ? element.id = param['id'] : '';
-      param['enctype'] ? element.enctype = param['enctype'] : '';
-      param['method'] ? element.method = param['method'] : '';
-      param['name'] ? element.name = param['name'] : '';
-      param['type'] ? element.type = param['type'] : '';
-      param['value'] ? element.value = param['value'] : '';
-    }
-
-    this.appendChild(element);
-    return element;
-  }
-});
-
 var qse = {
+  Define: function() {
+    var elementPrototype = typeof HTMLElement !== "undefined" ? HTMLElement.prototype : Element.prototype;
+
+    Object.defineProperty(elementPrototype, 'hasClass', {
+      writable: true,
+      enumerable: true,
+      configurable: true,
+      value: function(className) {
+	return !!this.className.match(new RegExp('(\\s|^)' + className + '(\\s|$)'));   
+      }
+    });
+
+    Object.defineProperty(elementPrototype, 'addClass', {
+      writable: true,
+      enumerable: true,
+      configurable: true,
+      value: function(className) {
+	if (!this.hasClass(className)) {
+	  this.className += ' ' + className;
+	}
+      }
+    });
+
+    Object.defineProperty(elementPrototype, 'removeClass', {
+      writable: true,
+      enumerable: true,
+      configurable: true,
+      value: function(className) {
+	if (this.hasClass(className)) {
+	  var reg = new RegExp('(\\s|^)' + className + '(\\s|$)');
+	  this.className = this.className.replace(reg, ' ');
+	}
+      }
+    });
+
+    Object.defineProperty(HTMLElement.prototype, 'addNode', {
+      writable: true,
+      enumerable: true,
+      configurable: true,
+      value: function(param) {
+	var element;
+
+	if (param['isTextNode']) {
+	  element = document.createTextNode(param['text']);
+	} else {
+	  element = document.createElement(param['nodeType']);
+	  param['className'] ? element.className = param['className'] : '';
+	  param['id'] ? element.id = param['id'] : '';
+	  param['enctype'] ? element.enctype = param['enctype'] : '';
+	  param['method'] ? element.method = param['method'] : '';
+	  param['name'] ? element.name = param['name'] : '';
+	  param['type'] ? element.type = param['type'] : '';
+	  param['value'] ? element.value = param['value'] : '';
+	}
+
+	this.appendChild(element);
+	return element;
+      }
+    });
+  },
   Editor: function() {
     $id('qse').className = 'qse';
 
@@ -322,6 +325,11 @@ var qse = {
       request.addEventListener('error', function(error) {
 	console.log(error);
       }, false);
+
+      // Upload progress monitor
+      request.addEventListener('progress', function(pro) {
+	Math.round(pro.loaded / pro.total * 100);
+      });
       
       // When server response
       request.addEventListener('load', function(result) {
@@ -336,7 +344,7 @@ var qse = {
 	  var image = JSON.parse(this.responseText);
 	  image.absUrl = upConfig.Host + image.url;
 	  image.absUri = image.absUrl;
-	  console.log(image.absUrl);
+	  console.log('http:' + image.absUrl);
 	} catch (error) {
 	  console.log(error);
 	}
@@ -353,6 +361,7 @@ var qse = {
   },
 
   Init: function() {
+    this.Define();
     this.Editor();
     this.Switcher();
     this.Uploader.ClickListener();
