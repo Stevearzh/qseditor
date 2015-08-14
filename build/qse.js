@@ -20,7 +20,7 @@ var upConfig = {
       }
     }
     result = result.substring(0, result.length - 1);
-    return btoa('{' + result + '}');
+    return Base64.encode('{' + result + '}');
   },
   
   Signature: function() {
@@ -59,6 +59,46 @@ function newRequest() {
 
   return xhr;
 }
+
+var detectResize = (function() {
+
+  function detectResize(id, intervall, callback) {
+    this.id = id;
+    this.el = document.getElementById(this.id);
+    this.callback = callback || function(){};
+
+    if (this.el) {
+      var self = this;
+      this.width = this.el.clientWidth;
+      this.height = this.el.clientHeight;
+
+      this.el.addEventListener('mouseup', function() {
+        self.detectResize();
+      });
+
+      this.el.addEventListener('keyup', function() {
+        self.detectResize();
+      });
+
+      if(intervall) setInterval(function() {
+          self.detectResize();
+      }, intervall);
+
+    }
+    return null;
+  }
+
+  detectResize.prototype.detectResize = function() {
+      if (this.width != this.el.clientWidth || this.height != this.el.clientHeight) {
+        this.callback(this);
+        this.width = this.el.clientWidth;
+        this.height = this.el.clientHeight;
+      }
+  };
+
+  return detectResize;
+
+})();
 
 var qse = {
   Define: function() {
@@ -107,13 +147,16 @@ var qse = {
 	  element = document.createTextNode(param['text']);
 	} else {
 	  element = document.createElement(param['nodeType']);
-	  param['className'] ? element.className = param['className'] : '';
-	  param['id'] ? element.id = param['id'] : '';
-	  param['enctype'] ? element.enctype = param['enctype'] : '';
-	  param['method'] ? element.method = param['method'] : '';
-	  param['name'] ? element.name = param['name'] : '';
-	  param['type'] ? element.type = param['type'] : '';
-	  param['value'] ? element.value = param['value'] : '';
+
+	  for (var attr in param) {
+	    if (param[attr]) {
+	      element[attr] = param[attr];
+	    }
+	  }
+
+	  if ('sandbox' in element) {
+	    element.sandbox = '';
+	  }
 	}
 
 	this.appendChild(element);
@@ -123,6 +166,24 @@ var qse = {
   },
   Editor: function() {
     $id('qse').className = 'qse';
+
+    $id('qse').addNode({
+      'nodeType': 'div',
+      'className': 'qse-pre-div',
+      'id': 'qsePreDiv'
+    }).addNode({
+      'nodeType': 'div',
+      'className': 'qse-pre-close',
+      'id': 'qsePreClose'
+    });
+
+  $id('qsePreDiv').addNode({
+      'nodeType': 'iframe',
+      'className': 'qse-preview',
+      'id': 'qsePreview',
+      'sandbox': ' ',
+      'security': 'restricted'
+    });
 
     $id('qse').addNode({
       'nodeType': 'div',
@@ -148,8 +209,8 @@ var qse = {
 
     $id('qseNav').addNode({
       'nodeType': 'div',
-      'className': 'qse-action qse-preview',
-      'id': 'qsePreview'
+      'className': 'qse-action qse-preview-button',
+      'id': 'qsePreviewButton'
     }).addNode({
       'isTextNode': true,
       'text': '预览'
@@ -254,6 +315,28 @@ var qse = {
       qseBBC.removeClass('qse-mode-clear');
       qseMd.addClass('qse-mode-clear');
     }
+  },
+
+  Resizer: function() {
+    window.onload = function() {
+      $id('qsePreview').style.height = String($id('qseNav').clientHeight + $id('qseFace').clientHeight) + 'px';
+    }
+    $id('qseArea').onresize = function() {
+      $id('qsePreview').style.height = String($id('qseNav').clientHeight + $id('qseFace').clientHeight) + 'px';
+    }
+    new detectResize('qseArea', 1, function() {
+      $id('qsePreview').style.height = String($id('qseNav').clientHeight + $id('qseFace').clientHeight) + 'px';
+    });
+  },
+
+  Previewer: function() {
+    $id('qsePreviewButton').onclick = function() {
+      $id('qsePreDiv').style.display = 'block';
+    };
+
+    $id('qsePreClose').onclick = function() {
+      $id('qsePreDiv').style.display = 'none';
+    };
   },
 
   Uploader: {
@@ -408,6 +491,8 @@ var qse = {
     this.Define();
     this.Editor();
     this.Switcher();
+    this.Resizer();
+    this.Previewer();
     this.Uploader.ClickListener();
     if (window.File && window.FileList && window.FileReader) {
       this.Uploader.Init();
