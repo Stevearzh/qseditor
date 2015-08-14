@@ -25,30 +25,18 @@
   min-width: 370px;
 }
 
-.qse-pre-div {
-  display: none;
-  position: absolute;
-  width: 100%;
-  background: #fff;
-  z-index: 15;
-}
-
-.qse-pre-close {
-  display: block;
-  position: absolute;
-  right: 2px;
-  top: 5px;
-  width: 10px;
-  height: 10px;
-  background: #aaa;
-  z-index: 20;
-}
-
 .qse-preview {
   display: block;
   position: relative;
   width: 100%;
   z-index: 15;
+  border: none;
+  border-top: 1px solid #979797;
+  background: #ddd;
+}
+
+.qse-preview-hidden {
+  display: none;
 }
 
 .qse-nav {
