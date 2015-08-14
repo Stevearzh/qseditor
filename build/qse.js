@@ -60,46 +60,6 @@ function newRequest() {
   return xhr;
 }
 
-var detectResize = (function() {
-
-  function detectResize(id, intervall, callback) {
-    this.id = id;
-    this.el = document.getElementById(this.id);
-    this.callback = callback || function(){};
-
-    if (this.el) {
-      var self = this;
-      this.width = this.el.clientWidth;
-      this.height = this.el.clientHeight;
-
-      this.el.addEventListener('mouseup', function() {
-        self.detectResize();
-      });
-
-      this.el.addEventListener('keyup', function() {
-        self.detectResize();
-      });
-
-      if(intervall) setInterval(function() {
-          self.detectResize();
-      }, intervall);
-
-    }
-    return null;
-  }
-
-  detectResize.prototype.detectResize = function() {
-      if (this.width != this.el.clientWidth || this.height != this.el.clientHeight) {
-        this.callback(this);
-        this.width = this.el.clientWidth;
-        this.height = this.el.clientHeight;
-      }
-  };
-
-  return detectResize;
-
-})();
-
 var qse = {
   Mode: 'Md',
   
@@ -225,7 +185,7 @@ var qse = {
 
   $id('qseMain').addNode({
       'nodeType': 'iframe',
-      'className': 'qse-preview qse-preview-hidden',
+      'className': 'qse-preview hidden',
       'id': 'qsePreview',
       'sandbox': ' ',
       'security': 'restricted'
@@ -298,25 +258,60 @@ var qse = {
     var qseMd = $id('qseMd');
     var qseBBC = $id('qseBBC');
 
-    qseMd.onclick = function() {
+    var mdMode = function() {
       qseMd.removeClass('qse-mode-clear');
       qseBBC.addClass('qse-mode-clear');
+      $id('qsePreview').addClass('hidden');
+      $id('qseArea').removeClass('hidden');
+      $id('qseImgUploader').removeClass('hidden');
       qse.Mode = 'Md';
+    };
+    var BBCMode = function() {
+      qseBBC.removeClass('qse-mode-clear');
+      qseMd.addClass('qse-mode-clear');
+      $id('qsePreview').addClass('hidden');
+      $id('qseArea').removeClass('hidden');
+      $id('qseImgUploader').removeClass('hidden');
+      qse.Mode = 'BBC';
+    };
+
+    qseMd.onclick = function() {
+      if (qse.Mode !== 'Md') {
+	if (!$id('qseArea').value) {
+	  mdMode();
+	} else {
+	  confirm('警告：切换标签会清除文本区中所有内容！是否继续？') ? (function() {
+	    $id('qseArea').value = '';
+	    mdMode();
+	  })() : '';
+	}
+      }
     }
 
     qseBBC.onclick = function() {
-      qseBBC.removeClass('qse-mode-clear');
-      qseMd.addClass('qse-mode-clear');
-      qse.Mode = 'BBC';
+      if (qse.Mode !== 'BBC') {
+	if (!$id('qseArea').value) {
+	  BBCMode();
+	} else {
+	  confirm('警告：切换标签会清除文本区中所有内容！是否继续？') ? (function() {
+	    $id('qseArea').value = '';
+	    BBCMode();
+	  })() : '';
+	}
+      }
     }
   },
 
   Previewer: function() {
     $id('qsePreviewButton').onclick = function() {
-      if ($id('qsePreview').hasClass('qse-preview-hidden')) {
-	$id('qsePreview').removeClass('qse-preview-hidden');
+      if ($id('qsePreview').hasClass('hidden')) {
+	$id('qsePreview').removeClass('hidden');
+	$id('qseArea').addClass('hidden');
+	$id('qseImgUploader').addClass('hidden');
       } else {
-	$id('qsePreview').addClass('qse-preview-hidden');
+	$id('qsePreview').addClass('hidden');
+	$id('qseArea').removeClass('hidden');
+	$id('qseImgUploader').removeClass('hidden');
       }
     };
   },

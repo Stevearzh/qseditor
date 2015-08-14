@@ -31,12 +31,13 @@
   width: 100%;
   z-index: 15;
   border: none;
-  border-top: 1px solid #979797;
+  border-radius: 5px;
   background: #ddd;
+  resize: vertical;
 }
 
-.qse-preview-hidden {
-  display: none;
+.hidden {
+  display: none !important;
 }
 
 .qse-nav {
