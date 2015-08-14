@@ -101,6 +101,8 @@ var detectResize = (function() {
 })();
 
 var qse = {
+  Mode: 'Md',
+  
   Define: function() {
     var elementPrototype = typeof HTMLElement !== "undefined" ? HTMLElement.prototype : Element.prototype;
 
@@ -309,11 +311,13 @@ var qse = {
     qseMd.onclick = function() {
       qseMd.removeClass('qse-mode-clear');
       qseBBC.addClass('qse-mode-clear');
+      qse.Mode = 'Md';
     }
 
     qseBBC.onclick = function() {
       qseBBC.removeClass('qse-mode-clear');
       qseMd.addClass('qse-mode-clear');
+      qse.Mode = 'BBC';
     }
   },
 
