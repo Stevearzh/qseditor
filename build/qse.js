@@ -171,24 +171,6 @@ var qse = {
 
     $id('qse').addNode({
       'nodeType': 'div',
-      'className': 'qse-pre-div',
-      'id': 'qsePreDiv'
-    }).addNode({
-      'nodeType': 'div',
-      'className': 'qse-pre-close',
-      'id': 'qsePreClose'
-    });
-
-  $id('qsePreDiv').addNode({
-      'nodeType': 'iframe',
-      'className': 'qse-preview',
-      'id': 'qsePreview',
-      'sandbox': ' ',
-      'security': 'restricted'
-    });
-
-    $id('qse').addNode({
-      'nodeType': 'div',
       'className': 'qse-nav',
       'id': 'qseNav'
     }).addNode({
@@ -239,6 +221,14 @@ var qse = {
       'nodeType': 'textarea',
       'className': 'qse-area',
       'id': 'qseArea'
+    });
+
+  $id('qseMain').addNode({
+      'nodeType': 'iframe',
+      'className': 'qse-preview qse-preview-hidden',
+      'id': 'qsePreview',
+      'sandbox': ' ',
+      'security': 'restricted'
     });
 
     $id('qseFace').addNode({
@@ -321,25 +311,13 @@ var qse = {
     }
   },
 
-  Resizer: function() {
-    window.onload = function() {
-      $id('qsePreview').style.height = String($id('qseNav').clientHeight + $id('qseFace').clientHeight) + 'px';
-    }
-    $id('qseArea').onresize = function() {
-      $id('qsePreview').style.height = String($id('qseNav').clientHeight + $id('qseFace').clientHeight) + 'px';
-    }
-    new detectResize('qseArea', 1, function() {
-      $id('qsePreview').style.height = String($id('qseNav').clientHeight + $id('qseFace').clientHeight) + 'px';
-    });
-  },
-
   Previewer: function() {
     $id('qsePreviewButton').onclick = function() {
-      $id('qsePreDiv').style.display = 'block';
-    };
-
-    $id('qsePreClose').onclick = function() {
-      $id('qsePreDiv').style.display = 'none';
+      if ($id('qsePreview').hasClass('qse-preview-hidden')) {
+	$id('qsePreview').removeClass('qse-preview-hidden');
+      } else {
+	$id('qsePreview').addClass('qse-preview-hidden');
+      }
     };
   },
 
@@ -495,7 +473,6 @@ var qse = {
     this.Define();
     this.Editor();
     this.Switcher();
-    this.Resizer();
     this.Previewer();
     this.Uploader.ClickListener();
     if (window.File && window.FileList && window.FileReader) {
