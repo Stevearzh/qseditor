@@ -1,7 +1,7 @@
 <qseditor name="qseditor">
 	<script src="./markdown-to-bbcode-js/public/js/underscore.js"></script>
 	<script src="./markdown-to-bbcode-js/public/js/markdown.js"></script>
-	<script src="./bbcode/bbcode.js"></script>
+	<script src="./Extendible-BBCode-Parser/xbbcode.js"></script>
 	<!-- FIXME 这两个不是很好用.. 各种解析错误和不支持 -->
 
 	<textarea id="qse-text"></textarea>
@@ -15,7 +15,11 @@
 			'parse': (new Markdown()).process,
 			'preview': function(textares, preview){
 				text = (this.mode == "markdown")?this.parse(textares.value):textares.value;
-				preview.srcdoc = bbcode.render(text);
+				preview.srcdoc = XBBCODE.process({
+					'text': text,
+					'removeMisalignedTags': false,
+					'addInLineBreaks': false
+				}).html;
 			},
 			'init': function(){
 				textares = document.getElementById('qse-text');

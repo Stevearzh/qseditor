@@ -1,3 +1,6 @@
 [submodule "markdown-to-bbcode-js"]
 	path = markdown-to-bbcode-js
 	url = https://github.com/oleander/markdown-to-bbcode-js.git
+[submodule "Extendible-BBCode-Parser"]
+	path = Extendible-BBCode-Parser
+	url = https://github.com/patorjk/Extendible-BBCode-Parser
