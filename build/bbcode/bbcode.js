@@ -59,10 +59,28 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         } 
         
         
+        // replace [hr] with <hr>
+        bbcode_table.hr = {
+            re: /\[hr\]/ig,
+            sub: function (match) { return '<hr>'; }
+        };
+        
+        // replace [ins]...[/ins] with <ins>...</ins>
+        bbcode_table.insert = {
+            re: /\[ins\]([\s\S]*?)\[\/ins\]/ig,
+            sub: function (match, p1) { return '<ins>' + p1 + '</ins>'; }
+        };
+        
         // replace [b]...[/b] with <strong>...</strong>
         bbcode_table.bold = {
             re: /\[b\]([\s\S]*?)\[\/b\]/ig,
             sub: function (match, p1) { return '<strong>' + p1 + '</strong>'; }
+        };
+        
+        // replace [em]...[/em] with <em>...</em>
+        bbcode_table.em = {
+            re: /\[em\]([\s\S]*?)\[\/em\]/ig,
+            sub: function (match, p1) { return '<em>' + p1 + '</em>'; }
         };
         
         
@@ -101,10 +119,16 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         };        
 
         
-        // replace [s]...[/s] with <del>...</del>
+        // replace [del]...[/del] with <del>...</del>
+        bbcode_table.delete = {
+            re: /\[del\]([\s\S]*?)\[\/del\]/ig,
+            sub: function (match, p1) { return '<del>' + p1 + '</del>'; }
+        };
+        
+        // replace [s]...[/s] with <samp>...</samp>
         bbcode_table.strikethrough = {
             re: /\[s\]([\s\S]*?)\[\/s\]/ig,
-            sub: function (match, p1) { return '<del>' + p1 + '</del>'; }
+            sub: function (match, p1) { return '<span style="text-decoration:line-through;">' + p1 + '</span>'; }
         };
         
         

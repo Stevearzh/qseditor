@@ -163,15 +163,6 @@ var qse = {
       'isTextNode': true,
       'text': '预览'
     });
-
-    $id('qseNav').addNode({
-      'nodeType': 'div',
-      'className': 'qse-action qse-fullscreen',
-      'id': 'qseFullscreen'
-    }).addNode({
-      'isTextNode': true,
-      'text': '全屏'
-    });
     
     $id('qse').addNode({
       'nodeType': 'div',
@@ -468,7 +459,7 @@ var qse = {
 	    if (qse.Mode === 'markdown') {
 	      $id('qseArea').value += '![](' + urlAddress + ')\n';
 	    } else if (qse.Mode === 'bbcode') {
-	      $id('qseArea').value += '[img=paste_img]' + urlAddress + '[/img]\n';
+	      $id('qseArea').value += '[img]' + urlAddress + '[/img]\n';
 	    } else {
 	      $id('qseArea').value += 'http:' + image.absUrl;
 	    }

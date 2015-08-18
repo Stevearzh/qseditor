@@ -1,6 +1,0 @@
-[submodule "md2bbc"]
-	path = md2bbc
-	url = https://github.com/alfateam123/md2bbc.git
-[submodule "bbcode"]
-	path = bbcode
-	url = https://github.com/kaimallea/bbcode.git
