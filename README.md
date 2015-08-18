@@ -2,7 +2,7 @@
 
 BBS post editor, markdown/bbcode support.
 
-## demo
+## Demo
 
 [https://stevearzh.github.io/qseditor](https://stevearzh.github.io/qseditor)
 
