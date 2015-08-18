@@ -1,7 +1,7 @@
 var upConfig = {
-  Bucket: 'up-loader',
+  Bucket: 'qseditor',
 
-  API: 'DIbaBDVZDMqFRBAtGA5G5yLz8z8=',     //表单 API，登录 UPYUN 官网获取
+  API: 'hXTO2xagYw98S646UEyRh7BJ+DM=',     //表单 API，登录 UPYUN 官网获取
   
   Param: {     //表单 API 参数，可依据 http://docs.upyun.com/api/form_api/ 文档按需求对参数增删改
     'expiration': (new Date().getTime()) + 60,
