@@ -10,10 +10,9 @@
 
 	<script>
 		qse = {
-			'mode': "bbcode", // or "markdown"
 			'parse': (new Showdown.converter(conv_opts)).makeBBCode,
 			'preview': function(textares, preview){
-				text = (this.mode == "markdown")?this.parse(textares.value):textares.value;
+				text = (window.localStorage.getItem('qsemode') == "markdown")?this.parse(textares.value):textares.value;
 				preview.srcdoc = bbcode.render(text);
 //				preview.srcdoc = XBBCODE.process({
 //					'text': text,
@@ -28,10 +27,10 @@
 				previewb = document.getElementById('qse-preview-button');
 
 				switchb.onclick = function(){
-					if(qse.mode == "bbcode"){
-						qse.mode = "markdown";
-					}else if(qse.mode == "markdown"){
-						qse.mode = "bbcode";
+					if(window.localStorage.getItem('qsemode') == "bbcode"){
+						window.localStorage.setItem('qsemode', "markdown");
+					}else if(window.localStorage.getItem('qsemode') == "markdown"){
+						window.localStorage.setItem('qsemode', "bbcode");
 					};
 				};
 
