@@ -61,7 +61,7 @@ function newRequest() {
 }
 
 var qse = {
-  Mode: 'Md',
+  Mode: 'markdown',
   
   Define: function() {
     var elementPrototype = typeof HTMLElement !== "undefined" ? HTMLElement.prototype : Element.prototype;
@@ -264,7 +264,7 @@ var qse = {
       $id('qsePreview').addClass('hidden');
       $id('qseArea').removeClass('hidden');
       $id('qseImgUploader').removeClass('hidden');
-      qse.Mode = 'Md';
+      qse.Mode = 'markdown';
     };
     var BBCMode = function() {
       qseBBC.removeClass('qse-mode-clear');
@@ -272,11 +272,11 @@ var qse = {
       $id('qsePreview').addClass('hidden');
       $id('qseArea').removeClass('hidden');
       $id('qseImgUploader').removeClass('hidden');
-      qse.Mode = 'BBC';
+      qse.Mode = 'bbcode';
     };
 
     qseMd.onclick = function() {
-      if (qse.Mode !== 'Md') {
+      if (qse.Mode !== 'markdown') {
 	if (!$id('qseArea').value) {
 	  mdMode();
 	} else {
@@ -289,7 +289,7 @@ var qse = {
     }
 
     qseBBC.onclick = function() {
-      if (qse.Mode !== 'BBC') {
+      if (qse.Mode !== 'bbcode') {
 	if (!$id('qseArea').value) {
 	  BBCMode();
 	} else {
@@ -308,6 +308,12 @@ var qse = {
 	$id('qsePreview').removeClass('hidden');
 	$id('qseArea').addClass('hidden');
 	$id('qseImgUploader').addClass('hidden');
+
+	var textares = $id('qseArea');
+	var preview = $id('qsePreview');
+	var text = (qse.Mode === "markdown") ? qse.Parser(textares.value) : textares.value;
+
+	preview.srcdoc = bbcode.render(text);
       } else {
 	$id('qsePreview').addClass('hidden');
 	$id('qseArea').removeClass('hidden');
@@ -315,6 +321,8 @@ var qse = {
       }
     };
   },
+
+  Parser: (new Showdown.converter(conv_opts)).makeBBCode,
 
   Uploader: {
     Init: function() {
@@ -377,13 +385,6 @@ var qse = {
     },
 
     ParseFile: function(file) {
-      qse.Uploader.Output(
-	'<p>File information: <strong>' + file.name +
-	  '</strong> type: <strong>' + file.type +
-	  '</strong> size: <strong>' + file.size +
-	  '</strong> bytes</p>'
-      );
-
       var request = newRequest(),
 	     data = new FormData();
 
@@ -418,7 +419,15 @@ var qse = {
 	    var image = JSON.parse(this.responseText);
 	    image.absUrl = upConfig.Host + image.url;
 	    image.absUri = image.absUrl;
-	    $id('qseArea').value += 'http:' + image.absUrl + '\n';
+	    var urlAddress = 'http:' + image.absUrl;
+
+	    if (qse.Mode === 'markdown') {
+	      $id('qseArea').value += '![](' + urlAddress + ')\n';
+	    } else if (qse.Mode === 'bbcode') {
+	      $id('qseArea').value += '[img=paste_img]' + urlAddress + '[/img]\n';
+	    } else {
+	      $id('qseArea').value += 'http:' + image.absUrl;
+	    }
 	  } catch (error) {
 	    console.log(error);
 	  }
@@ -447,7 +456,15 @@ var qse = {
 	    var image = JSON.parse(this.responseText);
 	    image.absUrl = upConfig.Host + image.url;
 	    image.absUri = image.absUrl;
-	    $id('qseArea').value += 'http:' + image.absUrl + '\n';
+	    var urlAddress = 'http:' + image.absUrl;
+	    
+	    if (qse.Mode === 'markdown') {
+	      $id('qseArea').value += '![](' + urlAddress + ')\n';
+	    } else if (qse.Mode === 'bbcode') {
+	      $id('qseArea').value += '[img=paste_img]' + urlAddress + '[/img]\n';
+	    } else {
+	      $id('qseArea').value += 'http:' + image.absUrl;
+	    }
 	  } catch (error) {
 	    console.log(error);
 	  }
@@ -456,12 +473,7 @@ var qse = {
 
       // Send data to server
       request.send(data);
-    },
-    
-    Output: function(msg) {
-      var m = $id("messages");
-      m.innerHTML = msg + m.innerHTML;
-    }
+    }    
   },
 
   Init: function() {
@@ -475,3 +487,5 @@ var qse = {
     }
   }
 };
+
+qse.Init();
