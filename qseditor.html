@@ -1,8 +1,7 @@
 <qseditor name="qseditor">
-	<script src="./markdown-to-bbcode-js/public/js/underscore.js"></script>
-	<script src="./markdown-to-bbcode-js/public/js/markdown.js"></script>
-	<script src="./Extendible-BBCode-Parser/xbbcode.js"></script>
-	<!-- FIXME 这两个不是很好用.. 各种解析错误和不支持 -->
+	<script src="./md2bbc/src/showdown.min.js"></script>
+	<script src="./md2bbc/mkd.js"></script>
+	<script src="./bbcode-parser/index.js"></script>
 
 	<textarea id="qse-text"></textarea>
 	<iframe sandbox id="qse-preview"></iframe>
@@ -12,7 +11,7 @@
 	<script>
 		qse = {
 			'mode': "bbcode", // or "markdown"
-			'parse': (new Markdown()).process,
+			'parse': (new Showdown.converter(conv_opts)).makeBBCode,
 			'preview': function(textares, preview){
 				text = (this.mode == "markdown")?this.parse(textares.value):textares.value;
 				preview.srcdoc = XBBCODE.process({
