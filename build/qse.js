@@ -1,3 +1,5 @@
+var formDataURL = '';     //用户发帖提交地址
+
 var upConfig = {
   Bucket: 'qseditor',
 
@@ -59,6 +61,8 @@ function newRequest() {
 
   return xhr;
 }
+
+var qsemode;
 
 var qse = {
   Mode: 'markdown',
@@ -254,35 +258,38 @@ var qse = {
     });
   },
 
+  MdMode: function() {
+    $id('qseMd').removeClass('qse-mode-clear');
+    $id('qseBBC').addClass('qse-mode-clear');
+    $id('qsePreview').addClass('hidden');
+    $id('qseArea').removeClass('hidden');
+    $id('qseImgUploader').removeClass('hidden');
+    qse.Mode = 'markdown';
+    window.localStorage.setItem('qsemode', 'markdown');
+  },
+
+  BBCMode: function() {
+    $id('qseBBC').removeClass('qse-mode-clear');
+    $id('qseMd').addClass('qse-mode-clear');
+    $id('qsePreview').addClass('hidden');
+    $id('qseArea').removeClass('hidden');
+    $id('qseImgUploader').removeClass('hidden');
+    qse.Mode = 'bbcode';
+    window.localStorage.setItem('qsemode', 'bbcode');
+  },
+
   Switcher: function() {
     var qseMd = $id('qseMd');
     var qseBBC = $id('qseBBC');
 
-    var mdMode = function() {
-      qseMd.removeClass('qse-mode-clear');
-      qseBBC.addClass('qse-mode-clear');
-      $id('qsePreview').addClass('hidden');
-      $id('qseArea').removeClass('hidden');
-      $id('qseImgUploader').removeClass('hidden');
-      qse.Mode = 'markdown';
-    };
-    var BBCMode = function() {
-      qseBBC.removeClass('qse-mode-clear');
-      qseMd.addClass('qse-mode-clear');
-      $id('qsePreview').addClass('hidden');
-      $id('qseArea').removeClass('hidden');
-      $id('qseImgUploader').removeClass('hidden');
-      qse.Mode = 'bbcode';
-    };
-
     qseMd.onclick = function() {
       if (qse.Mode !== 'markdown') {
 	if (!$id('qseArea').value) {
-	  mdMode();
+	  qse.MdMode();
 	} else {
 	  confirm('警告：切换标签会清除文本区中所有内容！是否继续？') ? (function() {
 	    $id('qseArea').value = '';
-	    mdMode();
+	    qse.MdMode();
 	  })() : '';
 	}
       }
@@ -291,11 +298,11 @@ var qse = {
     qseBBC.onclick = function() {
       if (qse.Mode !== 'bbcode') {
 	if (!$id('qseArea').value) {
-	  BBCMode();
+	  qse.BBCMode();
 	} else {
 	  confirm('警告：切换标签会清除文本区中所有内容！是否继续？') ? (function() {
 	    $id('qseArea').value = '';
-	    BBCMode();
+	    qse.BBCMode();
 	  })() : '';
 	}
       }
@@ -424,7 +431,7 @@ var qse = {
 	    if (qse.Mode === 'markdown') {
 	      $id('qseArea').value += '![](' + urlAddress + ')\n';
 	    } else if (qse.Mode === 'bbcode') {
-	      $id('qseArea').value += '[img=paste_img]' + urlAddress + '[/img]\n';
+	      $id('qseArea').value += '[img]' + urlAddress + '[/img]\n';
 	    } else {
 	      $id('qseArea').value += 'http:' + image.absUrl;
 	    }
@@ -476,7 +483,18 @@ var qse = {
     }    
   },
 
+  Submitter: function() {
+    $id('qseSubmit').onclick = function () {
+      var xhr = newRequest();
+
+      xhr.open('POST', formDataURL, true);
+    }
+  },
+
   Init: function() {
+    window.onload = function() {
+      window.localStorage.getItem('qsemode') === 'bbcode' ? qse.BBCMode() : qse.MdMode();
+    };
     this.Define();
     this.Editor();
     this.Switcher();
@@ -485,6 +503,7 @@ var qse = {
     if (window.File && window.FileList && window.FileReader) {
       this.Uploader.Init();
     }
+    this.Submitter();
   }
 };
 
