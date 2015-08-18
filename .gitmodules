@@ -3,4 +3,4 @@
 	url = https://github.com/alfateam123/md2bbc.git
 [submodule "bbcode"]
 	path = bbcode
-	url = https://github.com/DigitalRootsCRM/bbcode.git
+	url = https://github.com/kaimallea/bbcode.git
