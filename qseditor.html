@@ -1,7 +1,7 @@
 <qseditor name="qseditor">
 	<script src="./md2bbc/src/showdown.min.js"></script>
 	<script src="./md2bbc/mkd.js"></script>
-	<script src="./bbcode-parser/index.js"></script>
+	<script src="./bbcode/bbcode.js"></script>
 
 	<textarea id="qse-text"></textarea>
 	<iframe sandbox id="qse-preview"></iframe>
@@ -14,11 +14,12 @@
 			'parse': (new Showdown.converter(conv_opts)).makeBBCode,
 			'preview': function(textares, preview){
 				text = (this.mode == "markdown")?this.parse(textares.value):textares.value;
-				preview.srcdoc = XBBCODE.process({
-					'text': text,
-					'removeMisalignedTags': false,
-					'addInLineBreaks': false
-				}).html;
+				preview.srcdoc = bbcode.render(text);
+//				preview.srcdoc = XBBCODE.process({
+//					'text': text,
+//					'removeMisalignedTags': false,
+//					'addInLineBreaks': false
+//				}).html;
 			},
 			'init': function(){
 				textares = document.getElementById('qse-text');

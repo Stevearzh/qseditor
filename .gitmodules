@@ -1,9 +1,6 @@
-[submodule "Extendible-BBCode-Parser"]
-	path = Extendible-BBCode-Parser
-	url = https://github.com/patorjk/Extendible-BBCode-Parser
-[submodule "bbcode-parser"]
-	path = bbcode-parser
-	url = https://github.com/epochtalk/bbcode-parser.git
 [submodule "md2bbc"]
 	path = md2bbc
 	url = https://github.com/alfateam123/md2bbc.git
+[submodule "bbcode"]
+	path = bbcode
+	url = https://github.com/DigitalRootsCRM/bbcode.git
