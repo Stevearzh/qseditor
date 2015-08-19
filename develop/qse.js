@@ -1,7 +1,7 @@
-var formDataURL = '';     //用户发帖提交地址
+var formDataURL = '/post.php';     //用户发帖提交地址
 
 var upConfig = {
-  Bucket: 'qseditor',
+  Bucket: 'qseditor',     //UPCloud 空间名
 
   API: 'hXTO2xagYw98S646UEyRh7BJ+DM=',     //表单 API，登录 UPYUN 官网获取
   
@@ -319,7 +319,7 @@ var qse = {
 	$id('qseImgUploader').addClass('hidden');
 
 	var preview = $id('qsePreview');
-	var text = this.GetContent();
+	var text = qse.GetContent();
 
 	preview.srcdoc = bbcode.render(text);
       } else {
@@ -487,8 +487,37 @@ var qse = {
   Submitter: function() {
     $id('qseSubmit').onclick = function () {
       var xhr = newRequest();
+         data = new FormData();
+
+      data.append('content', qse.GetContent());
 
       xhr.open('POST', formDataURL, true);
+
+      if (xhr.addEventListener) {
+	xhr.addEventListener('error', function(error) {
+	  console.log(error);
+	}, false);
+
+	xhr.addEventListener('load', function(result) {
+	  var statusCode = result.target.status;
+
+	  if (statusCode !== 200) {
+	    console.log(new Error(result.target.status), result.target);
+	  }
+	}, false);
+      } else {
+	xhr.attachEvent('error', function(error) {
+	  console.log(error);
+	}, false);
+
+	xhr.attachEvent('load', function(result) {
+	  var statusCode = result.target.status;
+	  
+	  if (statusCode !== 200) {
+	    console.log(new Error(result.target.status), result.target);
+	  }
+	}, false);
+      }
     }
   },
 
