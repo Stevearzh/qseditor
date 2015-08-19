@@ -6,6 +6,11 @@ BBS post editor, markdown/bbcode supported.
 
 [https://stevearzh.github.io/qseditor](https://stevearzh.github.io/qseditor)
 
+## Author
+
+* [quininer](https://github.com/quininer)
+* [Stevearzh](https://github.com/Stevearzh)
+
 ## Markdown
 
 Markdown-mode is the default mode, but you can easily switch to bbcode-mode by click the switch tag on the top-left corner of editor.
