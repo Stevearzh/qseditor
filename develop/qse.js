@@ -300,6 +300,17 @@ var qse = {
     }
   },
 
+  GetContent: function() {
+	switch (qse.Mode) {
+		case "markdown":
+			return qse.Parser($id('qseArea').value);
+		case "bbcode":
+			return $id('qseArea').value;
+		default:
+			return $id('qseArea').value
+	};
+  },
+
   Previewer: function() {
     $id('qsePreviewButton').onclick = function() {
       if ($id('qsePreview').hasClass('hidden')) {
@@ -307,9 +318,8 @@ var qse = {
 	$id('qseArea').addClass('hidden');
 	$id('qseImgUploader').addClass('hidden');
 
-	var textares = $id('qseArea');
 	var preview = $id('qsePreview');
-	var text = (qse.Mode === "markdown") ? qse.Parser(textares.value) : textares.value;
+	var text = this.GetContent();
 
 	preview.srcdoc = bbcode.render(text);
       } else {
